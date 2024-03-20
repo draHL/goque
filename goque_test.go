@@ -14,10 +14,14 @@ func funcsleep(wait int) {
 }
 
 func TestQue(t *testing.T) {
-	maxQue := 15
-	maxGoroutine := 1
+	maxQue := 10
+	maxGoroutine := 0
 
-	que := goque.NewJobQueue(maxQue, maxGoroutine)
+	que, err := goque.NewJobQueue(maxQue, maxGoroutine)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
 
 	que.Start()
 	defer que.Stop()

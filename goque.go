@@ -14,12 +14,17 @@ type JobQueue struct {
 	wg     sync.WaitGroup
 }
 
-func NewJobQueue(maxSize int, maxGoroutine int) *JobQueue {
-
+func NewJobQueue(maxSize int, maxGoroutine int) (*JobQueue, error) {
+	if maxSize <= 1 {
+		return nil, errors.New("buffer size must be > 1")
+	}
+	if maxGoroutine < 1 {
+		return nil, errors.New("maxGoroutine must be >= 1")
+	}
 	return &JobQueue{
 		queue: make(chan func(), maxSize),
 		maxGo: maxGoroutine,
-	}
+	}, nil
 }
 
 func (p *JobQueue) Start() {
